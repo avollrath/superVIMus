@@ -1,0 +1,117 @@
+[gd_scene load_steps=15 format=3 uid="uid://bc838enotha55"]
+
+[ext_resource type="Script" path="res://scripts/box.gd" id="1_qfrvn"]
+[ext_resource type="Texture2D" uid="uid://dw30cd6x36ki6" path="res://assets/Cute_Fantasy_Free/Animals/Pig/Pig.png" id="2_a1xcj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_baobk"]
+atlas = ExtResource("2_a1xcj")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6oyj5"]
+atlas = ExtResource("2_a1xcj")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sevb6"]
+atlas = ExtResource("2_a1xcj")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ks2do"]
+atlas = ExtResource("2_a1xcj")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1hvi3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_baobk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6oyj5")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sevb6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ks2do")
+}],
+"loop": true,
+"name": &"walking",
+"speed": 4.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hul6d"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pv8p8"]
+size = Vector2(32, 32)
+
+[sub_resource type="Curve" id="Curve_gh60q"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.833333, 0.967033), 0.0, 0.0, 0, 0, Vector2(0.94, 0.527472), -1.88342, -1.88342, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_cuh75"]
+curve = SubResource("Curve_gh60q")
+
+[sub_resource type="Gradient" id="Gradient_hj6ia"]
+offsets = PackedFloat32Array(0, 0.877049, 1)
+colors = PackedColorArray(0.618933, 1.66051e-06, 7.21961e-07, 1, 0.799368, 0.0606494, 0.045506, 1, 0.921356, 0.0875913, 0.0671929, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_e654x"]
+gradient = SubResource("Gradient_hj6ia")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_mtkqo"]
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(20, 20, 20)
+emission_shape = 1
+emission_sphere_radius = 1.0
+angle_min = 56.1
+angle_max = 56.1
+spread = 180.0
+initial_velocity_min = 1.0
+initial_velocity_max = 70.0
+gravity = Vector3(0, 60, 0)
+scale_min = 0.5
+scale_max = 2.5
+color_initial_ramp = SubResource("GradientTexture1D_e654x")
+alpha_curve = SubResource("CurveTexture_cuh75")
+
+[node name="Box" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 7
+script = ExtResource("1_qfrvn")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(17, 20)
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_1hvi3")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.754696
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(16, 16)
+shape = SubResource("RectangleShape2D_hul6d")
+
+[node name="DetectionArea" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+position = Vector2(16, 16)
+shape = SubResource("RectangleShape2D_pv8p8")
+
+[node name="Blood" type="GPUParticles2D" parent="."]
+z_index = 5
+position = Vector2(15, 15)
+emitting = false
+amount = 1000
+process_material = SubResource("ParticleProcessMaterial_mtkqo")
+lifetime = 0.75
+one_shot = true
+explosiveness = 0.3
+randomness = 0.1

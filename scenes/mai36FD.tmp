@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://cfvmjtg0qiht"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_asshs"]
+[ext_resource type="PackedScene" uid="uid://elxryx8rectm" path="res://scenes/Player.tscn" id="2_ga2la"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_asshs")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="GameOverLabel" type="Label" parent="CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="Player" parent="." instance=ExtResource("2_ga2la")]
+position = Vector2(361, 307)
