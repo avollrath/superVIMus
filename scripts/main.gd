@@ -15,7 +15,7 @@ var total_level_time: float
 var time_remaining: float
 var current_level = 1
 var boxes_in_holes = 0
-var total_boxes = 20 # Starting number of boxes
+var total_boxes = 1 # Starting number of boxes
 const MAX_BOXES = 30  # Maximum boxes in any level
 const GRID_SIZE = 32  # Match with your Constants.gd
 var recent_kills = 0
@@ -117,7 +117,7 @@ func setup_level():
 			create_box(Utils.grid_to_world(box_pos))
 			playable_cells.erase(box_pos)
 	
-	if current_level >= 1:
+	if current_level >= 5:
 		var enemy_pos = get_position_away_from_player(playable_cells)
 		if enemy_pos:
 			var enemy_scene = preload("res://scenes/enemy.tscn")
