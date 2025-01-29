@@ -16,6 +16,11 @@ func _ready():
 	add_to_group("enemy")
 	position = Utils.grid_to_world(Utils.world_to_grid(position))
 	target_position = position
+	blood.modulate.a = 0
+	blood.emitting = true
+	await get_tree().create_timer(0.1).timeout
+	blood.emitting = false
+	blood.modulate.a = 1
 	start_movement_cycle()
 
 func start_movement_cycle():

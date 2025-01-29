@@ -9,6 +9,13 @@ extends Node
 @onready var game_over: AudioStreamPlayer = $GameOver
 @onready var win: AudioStreamPlayer = $Win
 @onready var player_die: AudioStreamPlayer = $PlayerDie
+@onready var monster_kill: AudioStreamPlayer = $MonsterKill
+@onready var first_blood: AudioStreamPlayer = $FirstBlood
+@onready var double_kill: AudioStreamPlayer = $DoubleKill
+@onready var mega_kill: AudioStreamPlayer = $MegaKill
+@onready var multi_kill: AudioStreamPlayer = $MultiKill
+@onready var triple_kill: AudioStreamPlayer = $TripleKill
+@onready var ultra_kill: AudioStreamPlayer = $UltraKill
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

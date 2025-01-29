@@ -8,17 +8,21 @@ extends Node2D
 @onready var game_over_label = $CanvasLayer/GameOverLabel
 @onready var time_progress_bar = $CanvasLayer/TimeProgressBar
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
-@onready var enemy_container = $Enemies
+@onready var camera: Camera2D = $Camera2D
 
 var level_time = 15.0
 var total_level_time: float
 var time_remaining: float
 var current_level = 1
 var boxes_in_holes = 0
-var is_game_over: bool = false
-var total_boxes = 1 # Starting number of boxes
+var total_boxes = 20 # Starting number of boxes
 const MAX_BOXES = 30  # Maximum boxes in any level
 const GRID_SIZE = 32  # Match with your Constants.gd
+var recent_kills = 0
+var kill_timer: float = 0
+const KILL_TIMEOUT: float = 2.0
+var pending_kill_check: bool = false
+var sound_check_timer: float = 0.3
 
 # Define visible game area bounds (in grid coordinates)
 const VISIBLE_BOUNDS = {
@@ -41,6 +45,33 @@ func _process(delta):
 		time_progress_bar.value = time_remaining
 		if time_remaining <= 0:
 			game_over()
+			
+	if kill_timer > 0:
+		kill_timer -= delta
+		if kill_timer <= 0:
+			recent_kills = 0  
+			
+	if pending_kill_check:
+		sound_check_timer -= delta
+		if sound_check_timer <= 0:
+			pending_kill_check = false
+			play_kill_sound()
+			
+func play_kill_sound() -> void:
+	if recent_kills >= 5:
+		AudioManager.monster_kill.play()
+		shake_camera(7.0, 1)
+	else:
+		match recent_kills:
+			2:
+				AudioManager.double_kill.play()
+				shake_camera(2.0, 0.3)
+			3:
+				AudioManager.multi_kill.play()
+				shake_camera(3.0, 0.4)
+			4:
+				AudioManager.ultra_kill.play()
+				shake_camera(5.0, 0.5)
 
 func setup_level():
 	game_over_label.text = "Level: %d" % [current_level]
@@ -86,13 +117,13 @@ func setup_level():
 			create_box(Utils.grid_to_world(box_pos))
 			playable_cells.erase(box_pos)
 	
-	if current_level >= 3:
-		var enemy_pos = get_random_empty_position(playable_cells)
+	if current_level >= 1:
+		var enemy_pos = get_position_away_from_player(playable_cells)
 		if enemy_pos:
 			var enemy_scene = preload("res://scenes/enemy.tscn")
 			var enemy = enemy_scene.instantiate()
 			enemy.position = Utils.grid_to_world(enemy_pos)
-			enemy_container.add_child(enemy)
+			enemies_container.add_child(enemy)
 			playable_cells.erase(enemy_pos)
 		
 	update_score_label()
@@ -114,6 +145,22 @@ func get_playable_cells() -> Array:
 				playable_cells.append(Vector2(x, y))
 	
 	return playable_cells
+	
+func get_position_away_from_player(playable_cells: Array, min_distance: int = 5) -> Vector2:
+	var valid_positions = []
+	var player_grid_pos = Utils.world_to_grid(player.position)
+	
+	for cell in playable_cells:
+		# Calculate grid distance (Manhattan distance)
+		var distance = abs(cell.x - player_grid_pos.x) + abs(cell.y - player_grid_pos.y)
+		if distance >= min_distance:
+			valid_positions.append(cell)
+	
+	if valid_positions.is_empty():
+		# Fallback to any available position if no position meets the minimum distance
+		return get_random_empty_position(playable_cells)
+	
+	return valid_positions[randi() % valid_positions.size()]
 
 func get_random_empty_position(playable_cells: Array) -> Vector2:
 	if playable_cells.is_empty():
@@ -142,15 +189,45 @@ func update_score_label() -> void:
 		boxes_container.get_child_count()
 	]
 
+func shake_camera(intensity: float = 10.0, duration: float = 0.4) -> void:
+	var original_position = camera.position
+	var tween = create_tween()
+	
+	for i in range(int(duration / 0.05)):
+		# Create random offset
+		var offset = Vector2(
+			randf_range(-intensity, intensity),
+			randf_range(-intensity, intensity)
+		)
+		
+		# Tween to offset
+		tween.tween_property(camera, "position", original_position + offset, 0.05)
+	
+	# Final tween back to original position
+	tween.tween_property(camera, "position", original_position, 0.05)
+
 func _on_box_entered_hole() -> void:
 	boxes_in_holes += 1
 	time_remaining += 3
 	update_score_label()
+	if kill_timer <= 0:
+		# First kill in a new sequence
+		recent_kills = 1
+		kill_timer = KILL_TIMEOUT
+	else:
+		# Consecutive kill within time window
+		recent_kills += 1
+		kill_timer = KILL_TIMEOUT  # Reset timer for next potential kill
+		
+		# Reset the sound check timer and set pending flag
+		if recent_kills >= 2:
+			pending_kill_check = true
+			sound_check_timer = 0.3 
 	
 	if boxes_in_holes == boxes_container.get_child_count():
-		AudioManager.win.play()
 		current_level += 1
 		await get_tree().create_timer(1.0).timeout
+		AudioManager.win.play()
 		setup_level()
 
 func _on_box_exited_hole() -> void:

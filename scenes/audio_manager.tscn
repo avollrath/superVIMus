@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://b26mdt5aks4n6"]
+[gd_scene load_steps=16 format=3 uid="uid://b26mdt5aks4n6"]
 
 [ext_resource type="AudioStream" uid="uid://blb1uw0v0m780" path="res://assets/Sound/bg-music.mp3" id="1_d8um4"]
 [ext_resource type="Script" path="res://scripts/audio_manager.gd" id="1_diyln"]
@@ -11,6 +11,10 @@
 [ext_resource type="AudioStream" uid="uid://cj404yswl1ddb" path="res://assets/Sound/gameover.mp3" id="9_c3rq6"]
 [ext_resource type="AudioStream" uid="uid://nhutgjlwh0lm" path="res://assets/Sound/win.mp3" id="10_ve2j8"]
 [ext_resource type="AudioStream" uid="uid://db8i3bbl2rs8" path="res://assets/Sound/player-die.mp3" id="11_1l214"]
+[ext_resource type="AudioStream" uid="uid://usnc08owmgbo" path="res://assets/Sound/monsterkill.wav" id="12_8bdl1"]
+[ext_resource type="AudioStream" uid="uid://buwqu1eh47vp0" path="res://assets/Sound/doublekill.wav" id="14_a1sxs"]
+[ext_resource type="AudioStream" uid="uid://bh4j5xm7nl5r1" path="res://assets/Sound/multikill.wav" id="16_oq4jh"]
+[ext_resource type="AudioStream" uid="uid://ftlgoycdjckw" path="res://assets/Sound/ultrakill.wav" id="18_j3a3j"]
 
 [node name="AudioManager" type="Node"]
 script = ExtResource("1_diyln")
@@ -58,3 +62,19 @@ bus = &"SFX"
 [node name="PlayerDie" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_1l214")
 bus = &"SFX"
+
+[node name="MonsterKill" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("12_8bdl1")
+bus = &"Announcer"
+
+[node name="DoubleKill" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("14_a1sxs")
+bus = &"Announcer"
+
+[node name="MultiKill" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("16_oq4jh")
+bus = &"Announcer"
+
+[node name="UltraKill" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("18_j3a3j")
+bus = &"Announcer"
