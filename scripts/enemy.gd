@@ -5,7 +5,7 @@ const GRID_SIZE = 32   # Match with your Constants.gd
 @onready var blood: GPUParticles2D = $Blood
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
-
+signal shake_requested(intensity: float, duration: float)
 enum Direction { UP, RIGHT, DOWN, LEFT }
 var current_direction = Direction.RIGHT
 var can_move = true
@@ -134,6 +134,7 @@ func check_player_collision():
 		if player_grid_pos == enemy_grid_pos:
 			if can_move:
 				can_move = false
+				emit_signal("shake_requested", 25, 0.8)
 				player.visible = false
 				blood.emitting = true
 				AudioManager.player_die.play()

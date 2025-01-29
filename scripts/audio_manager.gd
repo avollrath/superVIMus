@@ -16,6 +16,7 @@ extends Node
 @onready var multi_kill: AudioStreamPlayer = $MultiKill
 @onready var triple_kill: AudioStreamPlayer = $TripleKill
 @onready var ultra_kill: AudioStreamPlayer = $UltraKill
+@onready var background_music: AudioStreamPlayer = $BackgroundMusic
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

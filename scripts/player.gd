@@ -1,14 +1,13 @@
 extends CharacterBody2D
 
-@export var move_delay: float = 0.1  # Delay between moves to prevent rapid movement
+@export var move_delay: float = 0.01  # Delay between moves to prevent rapid movement
 var can_move: bool = true
 var rng = RandomNumberGenerator.new()
 var is_animating: bool = false
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
-
+signal shake_requested(intensity: float, duration: float)
 func _ready():
 	add_to_group("player")
-	print("Player ready at position:", position)
 	# Set initial animation and connect signal
 	sprite.play("idle_front")
 	sprite.animation_finished.connect(_on_animation_finished)
@@ -25,7 +24,6 @@ func _physics_process(_delta):
 	if Input.is_action_just_pressed("move_left"):
 		direction = Vector2.LEFT
 		play_direction_animation("walking_side", true, true)  # Force animation
-		
 	elif Input.is_action_just_pressed("move_down"):
 		direction = Vector2.DOWN
 		play_direction_animation("walking_front", false, true)  # Force animation
@@ -69,12 +67,10 @@ func move_character(direction: Vector2):
 	var tile_data = get_tree().get_root().get_node("Main").check_tile_at_position(target_position)
 	
 	if tile_data.is_wall:
-		print("Cannot move through wall")
 		return
 	
 	if tile_data.is_water:
 		can_move = false
-		print("Player touched water")
 		AudioManager.water.play()
 		sprite.play("drown")
 		position += move_velocity
@@ -218,7 +214,6 @@ func check_push_validity(boxes: Array, direction: Vector2) -> bool:
 		
 		var tile_data = get_tree().get_root().get_node("Main").check_tile_at_position(world_target)
 		if tile_data.is_wall:
-			print("Push blocked by wall at position: ", world_target)
 			return false
 		
 		var params = PhysicsPointQueryParameters2D.new()
@@ -232,7 +227,6 @@ func check_push_validity(boxes: Array, direction: Vector2) -> bool:
 		if results.size() > 0:
 			var collider = results[0].collider
 			if not collider.is_in_group("hole"):
-				print("Push blocked at position: ", world_target)
 				return false
 
 	return true
@@ -251,7 +245,7 @@ func check_for_hole_overlap():
 
 		if player_grid_pos == hole_grid_pos:
 			can_move = false
-			print("Player fell into hole at position: ", hole.position)
+			emit_signal("shake_requested", 20, 0.5)
 			AudioManager.player_die.play()
 			hole.trigger_fall_effect()
 			# Make player invisible

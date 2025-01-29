@@ -1,0 +1,203 @@
+[gd_scene load_steps=23 format=3 uid="uid://doqa7st5c3qci"]
+
+[ext_resource type="Script" path="res://scripts/start_screen.gd" id="1_cusoy"]
+[ext_resource type="FontFile" uid="uid://cvtgsivxf7jwq" path="res://assets/font/GrapeSoda.ttf" id="1_m61s5"]
+[ext_resource type="Texture2D" uid="uid://cgbxepkpifhas" path="res://assets/H.png" id="2_bhu37"]
+[ext_resource type="Texture2D" uid="uid://c7y60cfhs4ume" path="res://assets/J.png" id="3_yt7bu"]
+[ext_resource type="Texture2D" uid="uid://dcg4j6c00ehhk" path="res://assets/K.png" id="4_dc2fj"]
+[ext_resource type="Texture2D" uid="uid://c2lau043ob86b" path="res://assets/L.png" id="5_34lqb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8om05"]
+atlas = ExtResource("2_bhu37")
+region = Rect2(0, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6kpy5"]
+atlas = ExtResource("2_bhu37")
+region = Rect2(19, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_je60f"]
+atlas = ExtResource("2_bhu37")
+region = Rect2(38, 0, 19, 21)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bc7w4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8om05")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6kpy5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_je60f")
+}],
+"loop": true,
+"name": &"default",
+"speed": 4.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6fl5w"]
+atlas = ExtResource("3_yt7bu")
+region = Rect2(0, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mj487"]
+atlas = ExtResource("3_yt7bu")
+region = Rect2(19, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yqt1a"]
+atlas = ExtResource("3_yt7bu")
+region = Rect2(38, 0, 19, 21)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tpvu3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6fl5w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mj487")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yqt1a")
+}],
+"loop": true,
+"name": &"default",
+"speed": 4.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_37kob"]
+atlas = ExtResource("4_dc2fj")
+region = Rect2(0, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8a46o"]
+atlas = ExtResource("4_dc2fj")
+region = Rect2(19, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vxumi"]
+atlas = ExtResource("4_dc2fj")
+region = Rect2(38, 0, 19, 21)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_i8pu5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_37kob")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8a46o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vxumi")
+}],
+"loop": true,
+"name": &"default",
+"speed": 4.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7qwro"]
+atlas = ExtResource("5_34lqb")
+region = Rect2(0, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0o1vv"]
+atlas = ExtResource("5_34lqb")
+region = Rect2(19, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hslsl"]
+atlas = ExtResource("5_34lqb")
+region = Rect2(38, 0, 19, 21)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ntotw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7qwro")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0o1vv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hslsl")
+}],
+"loop": true,
+"name": &"default",
+"speed": 4.0
+}]
+
+[node name="StartScreen" type="CanvasLayer"]
+script = ExtResource("1_cusoy")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label2" type="Label" parent="."]
+offset_left = 64.0
+offset_top = 224.0
+offset_right = 569.0
+offset_bottom = 299.0
+theme_override_fonts/font = ExtResource("1_m61s5")
+theme_override_font_sizes/font_size = 32
+text = "PRESS ANY KEY TO CONTINUE!"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Label3" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -256.0
+offset_top = 32.0
+offset_right = 249.0
+offset_bottom = 107.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("1_m61s5")
+theme_override_font_sizes/font_size = 32
+text = "Welcome to superVIMus...
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Label" type="Label" parent="."]
+offset_left = 64.0
+offset_top = 87.0
+offset_right = 569.0
+offset_bottom = 162.0
+theme_override_fonts/font = ExtResource("1_m61s5")
+theme_override_font_sizes/font_size = 16
+text = "...this game intends to train the legendary VIM homerow navigation. You only need those 4 keys to play:"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="AnimatedSprite2DH" type="AnimatedSprite2D" parent="."]
+position = Vector2(244.75, 182.934)
+scale = Vector2(2.18421, 2.18421)
+sprite_frames = SubResource("SpriteFrames_bc7w4")
+autoplay = "default"
+frame = 2
+
+[node name="AnimatedSprite2DJ" type="AnimatedSprite2D" parent="."]
+position = Vector2(287.75, 182.934)
+scale = Vector2(2.18421, 2.18421)
+sprite_frames = SubResource("SpriteFrames_tpvu3")
+autoplay = "default"
+frame = 1
+
+[node name="AnimatedSprite2DK" type="AnimatedSprite2D" parent="."]
+position = Vector2(330.75, 182.934)
+scale = Vector2(2.18421, 2.18421)
+sprite_frames = SubResource("SpriteFrames_i8pu5")
+autoplay = "default"
+
+[node name="AnimatedSprite2DL" type="AnimatedSprite2D" parent="."]
+position = Vector2(372.75, 182.934)
+scale = Vector2(2.18421, 2.18421)
+sprite_frames = SubResource("SpriteFrames_ntotw")
+autoplay = "default"
+frame = 1

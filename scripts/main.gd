@@ -10,6 +10,11 @@ extends Node2D
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var camera: Camera2D = $Camera2D
 
+@onready var animated_h: AnimatedSprite2D = $CanvasLayer/AnimatedSprite2DH
+@onready var animated_j: AnimatedSprite2D = $CanvasLayer/AnimatedSprite2DJ
+@onready var animated_k: AnimatedSprite2D = $CanvasLayer/AnimatedSprite2DK
+@onready var animated_l: AnimatedSprite2D = $CanvasLayer/AnimatedSprite2DL
+
 var level_time = 15.0
 var total_level_time: float
 var time_remaining: float
@@ -23,6 +28,8 @@ var kill_timer: float = 0
 const KILL_TIMEOUT: float = 2.0
 var pending_kill_check: bool = false
 var sound_check_timer: float = 0.3
+var is_game_over: bool
+
 
 # Define visible game area bounds (in grid coordinates)
 const VISIBLE_BOUNDS = {
@@ -34,6 +41,7 @@ const VISIBLE_BOUNDS = {
 
 func _ready():
 	get_tree().paused = false
+	player.shake_requested.connect(shake_camera)
 	animation_player.play("show_splash_screen")
 	await get_tree().create_timer(2).timeout
 	game_over_label.hide()
@@ -72,6 +80,22 @@ func play_kill_sound() -> void:
 			4:
 				AudioManager.ultra_kill.play()
 				shake_camera(5.0, 0.5)
+				
+func _physics_process(_delta):
+	if get_tree().paused:
+		return
+		
+	if Input.is_action_just_pressed("move_left"):
+		animated_h.play()
+		
+	elif Input.is_action_just_pressed("move_down"):
+		animated_j.play()
+		
+	elif Input.is_action_just_pressed("move_up"):
+		animated_k.play()
+		
+	elif Input.is_action_just_pressed("move_right"):
+		animated_l.play()
 
 func setup_level():
 	game_over_label.text = "Level: %d" % [current_level]
@@ -93,7 +117,6 @@ func setup_level():
 	# Calculate playable area based on TileMap and visible bounds
 	var playable_cells = get_playable_cells()
 	if playable_cells.is_empty():
-		print("No playable cells found!")
 		return
 	
 	# Place hole
@@ -117,7 +140,7 @@ func setup_level():
 			create_box(Utils.grid_to_world(box_pos))
 			playable_cells.erase(box_pos)
 	
-	if current_level >= 5:
+	if current_level >= 6:
 		var enemy_pos = get_position_away_from_player(playable_cells)
 		if enemy_pos:
 			var enemy_scene = preload("res://scenes/enemy.tscn")
@@ -125,6 +148,7 @@ func setup_level():
 			enemy.position = Utils.grid_to_world(enemy_pos)
 			enemies_container.add_child(enemy)
 			playable_cells.erase(enemy_pos)
+			enemy.shake_requested.connect(shake_camera)
 		
 	update_score_label()
 	await get_tree().create_timer(1.0).timeout
@@ -227,8 +251,10 @@ func _on_box_entered_hole() -> void:
 	if boxes_in_holes == boxes_container.get_child_count():
 		current_level += 1
 		await get_tree().create_timer(1.0).timeout
-		AudioManager.win.play()
-		setup_level()
+		if is_game_over: return
+		else:
+			AudioManager.win.play()
+			setup_level()
 
 func _on_box_exited_hole() -> void:
 	boxes_in_holes -= 1
@@ -249,8 +275,7 @@ func check_tile_at_position(pos: Vector2) -> Dictionary:
 	return {"is_water": false, "is_wall": false}
 
 func game_over() -> void:
-	print("Game over called ...")
-	
+	is_game_over = true
 	AudioManager.game_over.play()
 	game_over_label.text = "Game Over!"
 	game_over_label.show()

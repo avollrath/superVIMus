@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=4 uid="uid://cfvmjtg0qiht"]
+[gd_scene load_steps=57 format=4 uid="uid://cfvmjtg0qiht"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_asshs"]
 [ext_resource type="Texture2D" uid="uid://cacbhhwrs51hj" path="res://assets/tiles.png" id="2_1oml0"]
@@ -16,6 +16,10 @@
 [ext_resource type="Texture2D" uid="uid://dgg5w6divn27s" path="res://assets/Cute_Fantasy_Free/Outdoor decoration/Fences.png" id="10_unmh1"]
 [ext_resource type="FontFile" uid="uid://cvtgsivxf7jwq" path="res://assets/font/GrapeSoda.ttf" id="13_l0y23"]
 [ext_resource type="Texture2D" uid="uid://ckv3gqfluylh" path="res://assets/splash.jpg" id="14_0eg4r"]
+[ext_resource type="Texture2D" uid="uid://cgbxepkpifhas" path="res://assets/H.png" id="17_5qvhy"]
+[ext_resource type="Texture2D" uid="uid://c7y60cfhs4ume" path="res://assets/J.png" id="18_ywarr"]
+[ext_resource type="Texture2D" uid="uid://dcg4j6c00ehhk" path="res://assets/K.png" id="19_0pmxa"]
+[ext_resource type="Texture2D" uid="uid://c2lau043ob86b" path="res://assets/L.png" id="20_acb15"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_swewl"]
 texture = ExtResource("2_1oml0")
@@ -2365,6 +2369,122 @@ bg_color = Color(0.678944, 0.678944, 0.678944, 0.631373)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mkh47"]
 bg_color = Color(0, 0, 0, 0.533333)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_8om05"]
+atlas = ExtResource("17_5qvhy")
+region = Rect2(0, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6kpy5"]
+atlas = ExtResource("17_5qvhy")
+region = Rect2(19, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_je60f"]
+atlas = ExtResource("17_5qvhy")
+region = Rect2(38, 0, 19, 21)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sqlwv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8om05")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6kpy5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_je60f")
+}],
+"loop": false,
+"name": &"default",
+"speed": 24.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6fl5w"]
+atlas = ExtResource("18_ywarr")
+region = Rect2(0, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mj487"]
+atlas = ExtResource("18_ywarr")
+region = Rect2(19, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yqt1a"]
+atlas = ExtResource("18_ywarr")
+region = Rect2(38, 0, 19, 21)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tdx1v"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6fl5w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mj487")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yqt1a")
+}],
+"loop": false,
+"name": &"default",
+"speed": 24.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_37kob"]
+atlas = ExtResource("19_0pmxa")
+region = Rect2(0, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8a46o"]
+atlas = ExtResource("19_0pmxa")
+region = Rect2(19, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vxumi"]
+atlas = ExtResource("19_0pmxa")
+region = Rect2(38, 0, 19, 21)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dt861"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_37kob")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8a46o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vxumi")
+}],
+"loop": false,
+"name": &"default",
+"speed": 24.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7qwro"]
+atlas = ExtResource("20_acb15")
+region = Rect2(0, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0o1vv"]
+atlas = ExtResource("20_acb15")
+region = Rect2(19, 0, 19, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hslsl"]
+atlas = ExtResource("20_acb15")
+region = Rect2(38, 0, 19, 21)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_obdo1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7qwro")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0o1vv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hslsl")
+}],
+"loop": false,
+"name": &"default",
+"speed": 24.0
+}]
+
 [sub_resource type="Animation" id="Animation_vynxx"]
 length = 0.001
 tracks/0/type = "value"
@@ -2410,6 +2530,18 @@ tracks/3/path = NodePath("CanvasLayer/SplashBackground/Label:visible")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("CanvasLayer/SplashBackground/Label2:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
@@ -2467,6 +2599,18 @@ tracks/3/keys = {
 "update": 1,
 "values": [true, false]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("CanvasLayer/SplashBackground/Label2:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 2.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_vsbkr"]
 _data = {
@@ -2513,7 +2657,6 @@ text = "Score
 vertical_alignment = 1
 
 [node name="GameOverLabel" type="Label" parent="CanvasLayer"]
-visible = false
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -2563,9 +2706,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -160.0
-offset_top = -84.0
+offset_top = -115.0
 offset_right = 160.0
-offset_bottom = 84.0
+offset_bottom = 53.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("14_0eg4r")
@@ -2580,18 +2723,57 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -40.0
-offset_top = -72.0
+offset_top = -130.0
 offset_right = 76.0
-offset_bottom = -37.0
+offset_bottom = -95.0
 grow_horizontal = 2
 grow_vertical = 0
 scale = Vector2(0.7, 0.7)
 theme_override_fonts/font = ExtResource("13_l0y23")
 theme_override_font_sizes/font_size = 16
-text = "by André Vollrath
-www.vollrath.dev"
+text = "by André Vollrath"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="CanvasLayer/SplashBackground"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -75.0
+offset_top = -103.0
+offset_right = 139.0
+offset_bottom = -68.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.7, 0.7)
+theme_override_fonts/font = ExtResource("13_l0y23")
+theme_override_font_sizes/font_size = 32
+text = "www.vollrath.dev"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimatedSprite2DH" type="AnimatedSprite2D" parent="CanvasLayer"]
+position = Vector2(284.397, 340.703)
+scale = Vector2(1.305, 1.305)
+sprite_frames = SubResource("SpriteFrames_sqlwv")
+
+[node name="AnimatedSprite2DJ" type="AnimatedSprite2D" parent="CanvasLayer"]
+position = Vector2(308.397, 340.703)
+scale = Vector2(1.305, 1.305)
+sprite_frames = SubResource("SpriteFrames_tdx1v")
+
+[node name="AnimatedSprite2DK" type="AnimatedSprite2D" parent="CanvasLayer"]
+position = Vector2(332.397, 340.703)
+scale = Vector2(1.305, 1.305)
+sprite_frames = SubResource("SpriteFrames_dt861")
+
+[node name="AnimatedSprite2DL" type="AnimatedSprite2D" parent="CanvasLayer"]
+position = Vector2(356.397, 340.703)
+scale = Vector2(1.305, 1.305)
+sprite_frames = SubResource("SpriteFrames_obdo1")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

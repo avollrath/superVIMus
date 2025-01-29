@@ -21,12 +21,10 @@ script = ExtResource("1_diyln")
 
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("1_d8um4")
-autoplay = true
 bus = &"Music"
 
 [node name="Footstep" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_0o1lk")
-autoplay = true
 bus = &"SFX"
 
 [node name="Eating" type="AudioStreamPlayer" parent="."]
@@ -57,6 +55,7 @@ bus = &"SFX"
 
 [node name="Win" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_ve2j8")
+pitch_scale = 0.89
 bus = &"SFX"
 
 [node name="PlayerDie" type="AudioStreamPlayer" parent="."]
