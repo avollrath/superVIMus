@@ -9,7 +9,7 @@
 [ext_resource type="AudioStream" uid="uid://dcvmc1w75grin" path="res://assets/Sound/pig-die.mp3" id="7_db5wc"]
 [ext_resource type="AudioStream" uid="uid://cwspjtgv3p2dx" path="res://assets/Sound/water.mp3" id="8_bw0f8"]
 [ext_resource type="AudioStream" uid="uid://cj404yswl1ddb" path="res://assets/Sound/gameover.mp3" id="9_c3rq6"]
-[ext_resource type="AudioStream" uid="uid://nhutgjlwh0lm" path="res://assets/Sound/win.mp3" id="10_ve2j8"]
+[ext_resource type="AudioStream" uid="uid://cn31f48x5mayr" path="res://assets/Sound/rizz-sound-effect.mp3" id="10_5hjbx"]
 [ext_resource type="AudioStream" uid="uid://db8i3bbl2rs8" path="res://assets/Sound/player-die.mp3" id="11_1l214"]
 [ext_resource type="AudioStream" uid="uid://usnc08owmgbo" path="res://assets/Sound/monsterkill.wav" id="12_8bdl1"]
 [ext_resource type="AudioStream" uid="uid://buwqu1eh47vp0" path="res://assets/Sound/doublekill.wav" id="14_a1sxs"]
@@ -54,7 +54,7 @@ stream = ExtResource("9_c3rq6")
 bus = &"SFX"
 
 [node name="Win" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("10_ve2j8")
+stream = ExtResource("10_5hjbx")
 pitch_scale = 0.89
 bus = &"SFX"
 
