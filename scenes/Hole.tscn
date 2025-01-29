@@ -1,7 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://bhl1uetoc50sv"]
+[gd_scene load_steps=21 format=3 uid="uid://bhl1uetoc50sv"]
 
 [ext_resource type="Script" path="res://scripts/hole.gd" id="1_w5oj7"]
 [ext_resource type="Texture2D" uid="uid://dljmf57nq88d" path="res://assets/Cute_Fantasy_Free/Enemies/Skeleton.png" id="2_riwil"]
+[ext_resource type="FontFile" uid="uid://cvtgsivxf7jwq" path="res://assets/font/GrapeSoda.ttf" id="3_ai7a1"]
+[ext_resource type="Texture2D" uid="uid://bslb52jwsftg7" path="res://assets/speech-bubble.png" id="4_2lxwk"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tdj3a"]
 atlas = ExtResource("2_riwil")
@@ -56,6 +58,101 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0hsye"]
 size = Vector2(32, 32)
 
+[sub_resource type="Curve" id="Curve_aelfx"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.833333, 0.967033), 0.0, 0.0, 0, 0, Vector2(0.94, 0.527472), -1.88342, -1.88342, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_flpc7"]
+curve = SubResource("Curve_aelfx")
+
+[sub_resource type="Gradient" id="Gradient_be04i"]
+offsets = PackedFloat32Array(0, 0.221311, 1)
+colors = PackedColorArray(0.618933, 1.66051e-06, 7.21961e-07, 1, 0.799368, 0.0606494, 0.045506, 1, 0.921356, 0.0875913, 0.0671929, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gkhyg"]
+gradient = SubResource("Gradient_be04i")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_34y7q"]
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(20, 20, 20)
+emission_shape = 1
+emission_sphere_radius = 1.0
+angle_min = 56.1
+angle_max = 56.1
+spread = 180.0
+initial_velocity_min = 5.0
+initial_velocity_max = 120.0
+gravity = Vector3(0, 60, 0)
+scale_min = 0.5
+scale_max = 3.0
+color_initial_ramp = SubResource("GradientTexture1D_gkhyg")
+alpha_curve = SubResource("CurveTexture_flpc7")
+
+[sub_resource type="Animation" id="Animation_uk1x1"]
+resource_name = "text"
+length = 10.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Speech:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3.53333, 9),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Speech/Text:text")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(3.23333, 5.23333, 5.33333, 6.96667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": ["I'm hungry!
+", "I'm hungry!
+", "Feed me ...
+", "PIGS!!"]
+}
+
+[sub_resource type="Animation" id="Animation_0txuo"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Speech:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Speech/Text:text")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["I'm hungry!
+"]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rjuxb"]
+_data = {
+"RESET": SubResource("Animation_0txuo"),
+"text": SubResource("Animation_uk1x1")
+}
+
 [node name="Hole" type="StaticBody2D" groups=["hole"]]
 collision_layer = 4
 collision_mask = 3
@@ -73,3 +170,41 @@ frame_progress = 0.391375
 position = Vector2(16, 16)
 shape = SubResource("RectangleShape2D_0hsye")
 one_way_collision_margin = 0.0
+
+[node name="Blood" type="GPUParticles2D" parent="."]
+z_index = 5
+position = Vector2(15, 15)
+emitting = false
+amount = 1000
+process_material = SubResource("ParticleProcessMaterial_34y7q")
+lifetime = 0.4
+one_shot = true
+explosiveness = 0.2
+randomness = 0.1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_rjuxb")
+}
+
+[node name="Speech" type="Node2D" parent="."]
+visible = false
+
+[node name="Text" type="Label" parent="Speech"]
+z_index = 1
+offset_left = -58.0
+offset_top = -34.0
+offset_right = 14.0
+offset_bottom = -18.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_ai7a1")
+theme_override_font_sizes/font_size = 16
+text = "I'm hungry!
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpeechBalloon" type="Sprite2D" parent="Speech"]
+position = Vector2(-26.01, -16.3125)
+scale = Vector2(1.735, 1.735)
+texture = ExtResource("4_2lxwk")

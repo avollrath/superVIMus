@@ -2,11 +2,16 @@ extends CharacterBody2D
 
 @export var move_delay: float = 0.1  # Delay between moves to prevent rapid movement
 var can_move: bool = true
+var rng = RandomNumberGenerator.new()
+var is_animating: bool = false
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 func _ready():
 	add_to_group("player")
 	print("Player ready at position:", position)
-	log_all_boxes_and_holes()
+	# Set initial animation and connect signal
+	sprite.play("idle_front")
+	sprite.animation_finished.connect(_on_animation_finished)
 
 func _physics_process(_delta):
 	if get_tree().paused:
@@ -19,28 +24,67 @@ func _physics_process(_delta):
 
 	if Input.is_action_just_pressed("move_left"):
 		direction = Vector2.LEFT
+		play_direction_animation("walking_side", true, true)  # Force animation
+		
 	elif Input.is_action_just_pressed("move_down"):
 		direction = Vector2.DOWN
+		play_direction_animation("walking_front", false, true)  # Force animation
+		
 	elif Input.is_action_just_pressed("move_up"):
 		direction = Vector2.UP
+		play_direction_animation("walking_back", false, true)  # Force animation
+		
 	elif Input.is_action_just_pressed("move_right"):
 		direction = Vector2.RIGHT
+		play_direction_animation("walking_side", false, true)  # Force animation
 
 	if direction != Vector2.ZERO:
 		can_move = false
-		print("\n--- Player Push Initiated ---")
-		print("Player pushed: ", direction)
+		AudioManager.footstep.pitch_scale = rng.randf_range(0.7, 1.5)
+		AudioManager.footstep.play()
 		move_character(direction)
 		await get_tree().create_timer(move_delay).timeout
 		check_for_hole_overlap()
 		can_move = true
-		print("--- Player Push Completed ---\n")
+
+func play_direction_animation(anim_name: String, flip_horizontal: bool = false, force: bool = false):
+	if not is_animating or force:  # Allow animation override if forced
+		is_animating = true
+		sprite.play(anim_name)
+		sprite.flip_h = flip_horizontal
+
+func _on_animation_finished():
+	# When any walking animation finishes, return to idle
+	if sprite.animation.begins_with("walking_"):
+		is_animating = false
+		if not Input.is_action_pressed("move_left") and \
+		   not Input.is_action_pressed("move_right") and \
+		   not Input.is_action_pressed("move_up") and \
+		   not Input.is_action_pressed("move_down"):
+			sprite.play("idle_front")
 
 func move_character(direction: Vector2):
 	var move_velocity = direction * Constants.GRID_SIZE
 	var target_position = position + move_velocity
-	print("Attempting to move player to: ", target_position)
-
+	var tile_data = get_tree().get_root().get_node("Main").check_tile_at_position(target_position)
+	
+	if tile_data.is_wall:
+		print("Cannot move through wall")
+		return
+	
+	if tile_data.is_water:
+		can_move = false
+		print("Player touched water")
+		AudioManager.water.play()
+		sprite.play("drown")
+		position += move_velocity
+		await get_tree().create_timer(0.4).timeout
+		var main_scene = get_tree().get_root().get_node("Main")
+		if main_scene.has_method("game_over"):
+			main_scene.game_over()
+		return
+	
+	
 	var space_state = get_world_2d().direct_space_state
 	var push_collision_mask = (1 << 1) | (1 << 2)
 
@@ -61,23 +105,16 @@ func move_character(direction: Vector2):
 			break
 
 	if initial_box:
-		print("Initial box found: ", initial_box.name)
 		var connected_boxes = find_pushable_boxes(initial_box, direction)
 		if connected_boxes.size() > 0:
-			print("Pushable boxes found: ", connected_boxes.size())
 			var can_push = check_push_validity(connected_boxes, direction)
 			if can_push:
-				print("Push is valid. Moving boxes.")
 				push_boxes(connected_boxes, direction)
 				position += move_velocity
 				position = Utils.grid_to_world(Utils.world_to_grid(position))
-			else:
-				print("Cannot push boxes due to blockage.")
-		log_all_boxes_and_holes()
 	else:
 		position += move_velocity
 		position = Utils.grid_to_world(Utils.world_to_grid(position))
-		log_all_boxes_and_holes()
 
 func find_pushable_boxes(initial_box: Node2D, push_direction: Vector2) -> Array:
 	var pushable = [initial_box]
@@ -178,6 +215,12 @@ func check_push_validity(boxes: Array, direction: Vector2) -> bool:
 			continue
 
 		var world_target = Utils.grid_to_world(target_pos)
+		
+		var tile_data = get_tree().get_root().get_node("Main").check_tile_at_position(world_target)
+		if tile_data.is_wall:
+			print("Push blocked by wall at position: ", world_target)
+			return false
+		
 		var params = PhysicsPointQueryParameters2D.new()
 		params.position = world_target
 		params.collide_with_bodies = true
@@ -195,11 +238,10 @@ func check_push_validity(boxes: Array, direction: Vector2) -> bool:
 	return true
 
 func push_boxes(boxes: Array, direction: Vector2):
+	[AudioManager.pig_1, AudioManager.pig_2][randi() % 2].play()
 	for box in boxes:
-		print("Moving box: ", box.name, " from: ", box.position)
 		box.position += direction * Constants.GRID_SIZE
 		box.position = Utils.grid_to_world(Utils.world_to_grid(box.position))
-		print("Moved box: ", box.name, " to: ", box.position)
 
 func check_for_hole_overlap():
 	var holes = get_tree().get_nodes_in_group("hole")
@@ -208,23 +250,14 @@ func check_for_hole_overlap():
 		var hole_grid_pos = Utils.world_to_grid(hole.position)
 
 		if player_grid_pos == hole_grid_pos:
+			can_move = false
 			print("Player fell into hole at position: ", hole.position)
-			# Directly call game_over on the main scene
-			var main_scene = get_tree().get_root().get_node("Main")  # Adjust path if needed
+			AudioManager.player_die.play()
+			hole.trigger_fall_effect()
+			# Make player invisible
+			visible = false
+			# Call game over
+			var main_scene = get_tree().get_root().get_node("Main")
 			if main_scene.has_method("game_over"):
 				main_scene.game_over()
 			return
-
-func log_all_boxes_and_holes():
-	var boxes = get_tree().get_nodes_in_group("boxes")
-	var holes = get_tree().get_nodes_in_group("hole")
-	
-	print("\n--- Current Positions ---")
-	print("Player Position: ", position)
-	
-	for box in boxes:
-		print("Box ", box.name, " Position: ", box.position)
-	
-	for hole in holes:
-		print("Hole ", hole.name, " Position: ", hole.position)
-	print("-------------------------\n")

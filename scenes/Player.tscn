@@ -1,7 +1,23 @@
-[gd_scene load_steps=36 format=3 uid="uid://elxryx8rectm"]
+[gd_scene load_steps=40 format=3 uid="uid://elxryx8rectm"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_pp4k8"]
 [ext_resource type="Texture2D" uid="uid://b5j1bl0a01qp" path="res://assets/Cute_Fantasy_Free/Player/Player.png" id="2_0n2u7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dnixu"]
+atlas = ExtResource("2_0n2u7")
+region = Rect2(0, 288, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rbh6s"]
+atlas = ExtResource("2_0n2u7")
+region = Rect2(32, 288, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qb2m3"]
+atlas = ExtResource("2_0n2u7")
+region = Rect2(64, 288, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e6owv"]
+atlas = ExtResource("2_0n2u7")
+region = Rect2(96, 288, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jmbcv"]
 atlas = ExtResource("2_0n2u7")
@@ -127,6 +143,23 @@ region = Rect2(160, 128, 32, 32)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_dnixu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rbh6s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qb2m3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e6owv")
+}],
+"loop": true,
+"name": &"drown",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_jmbcv")
 }, {
 "duration": 1.0,
@@ -190,7 +223,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_e56bo")
 }],
-"loop": true,
+"loop": false,
 "name": &"walking_back",
 "speed": 8.0
 }, {
@@ -213,7 +246,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_grxyv")
 }],
-"loop": true,
+"loop": false,
 "name": &"walking_front",
 "speed": 8.0
 }, {
@@ -236,7 +269,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_snnip")
 }],
-"loop": true,
+"loop": false,
 "name": &"walking_side",
 "speed": 8.0
 }]
@@ -252,12 +285,12 @@ collision_mask = 6
 script = ExtResource("1_pp4k8")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(21, 18)
+position = Vector2(17, 18)
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_c368y")
-animation = &"walking_side"
+animation = &"drown"
 autoplay = "idle_front"
-frame_progress = 0.388646
+frame_progress = 0.495949
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(16, 16)
