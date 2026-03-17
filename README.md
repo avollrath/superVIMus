@@ -2,35 +2,49 @@
 
 ![superVIMus preview](./supervimus.webp)
 
-[Play superVIMus in your browser](https://avollrath.github.io/superVIMus/)
+superVIMus is a small browser-playable puzzle game built to help you build muscle memory for Vim's `hjkl` movement keys.
 
-superVIMus is a small puzzle game designed to build muscle memory for the `hjkl` movement keys used in Vim.
+[Play it here](https://avollrath.github.io/superVIMus/)
 
-The game combines simple box-pushing mechanics with playful pixel graphics and a slightly absurd twist, making it a fun way to practice keyboard navigation.
+## Overview
 
-Built with the Godot engine using GDScript, it explores grid-based movement, level design, and puzzle mechanics.
+superVIMus takes a familiar editor habit and turns it into a game. Instead of memorizing `h`, `j`, `k`, and `l` through dry repetition, you practice them by moving through short grid-based puzzle spaces, pushing pigs into holes, dodging hazards, and building speed through play.
 
-## What It Is
+The result is a compact Godot project that mixes simple mechanics, playful pixel art, and just enough chaos to make the controls stick.
 
-- A compact puzzle game centered on Vim-style movement
-- A playful box-pushing experience with pixel-art presentation
-- A Godot project built for quick browser play
+## Features
 
-## Why It Exists
+- Vim-style movement using `h`, `j`, `k`, and `l`
+- Grid-based puzzle gameplay with box-pushing mechanics
+- Pixel-art presentation with a playful, slightly absurd tone
+- Browser-playable HTML5 export
+- Built in Godot with GDScript
 
-If you use Vim, learning `hjkl` is mostly about repetition and muscle memory. superVIMus turns that repetition into a small game, giving you a fun way to practice until the movement keys start to feel natural.
+## Why This Project Exists
 
-## Built With
+Learning Vim movement is mostly a muscle-memory problem. The keys are simple, but they only become natural after enough repetition. superVIMus was designed as a more fun way to get that repetition in by turning navigation practice into an actual play loop.
 
-- Godot
-- GDScript
-- HTML5/Web export
-- Grid-based movement and puzzle mechanics
+## Controls
 
-## Play Online
+- `h`: move left
+- `j`: move down
+- `k`: move up
+- `l`: move right
 
-Try it here:
+## Tech Stack
 
-https://avollrath.github.io/superVIMus/
+- Engine: Godot
+- Language: GDScript
+- Platform: HTML5/Web export
+- Structure: scene-based project with grid movement and puzzle systems
 
-Sharpen your navigation skills and see how far your Vim movement habits can take you.
+
+## Development
+
+This repository contains the full Godot project used to build the web version. The main game starts from the scene defined in the project configuration and is exported to the `docs/` folder for GitHub Pages hosting.
+
+## Credits
+
+Created by Andre Vollrath.
+
+If you use Vim, give it a try and see whether your fingers start reaching for `hjkl` a little faster afterward.
