@@ -1,4 +1,7 @@
 extends Node2D
+const ENEMY_SCENE = preload("res://scenes/enemy.tscn")
+const UI_FONT = preload("res://assets/font/GrapeSoda.ttf")
+
 @onready var enemies_container: Node2D = $Enemies
 @onready var boxes_container = $Boxes
 @onready var player = $Player
@@ -14,6 +17,7 @@ extends Node2D
 @onready var animated_j: AnimatedSprite2D = $CanvasLayer/AnimatedSprite2DJ
 @onready var animated_k: AnimatedSprite2D = $CanvasLayer/AnimatedSprite2DK
 @onready var animated_l: AnimatedSprite2D = $CanvasLayer/AnimatedSprite2DL
+@onready var splash_background: ColorRect = $CanvasLayer/SplashBackground
 
 var level_time = 15.0
 var total_level_time: float
@@ -29,6 +33,8 @@ const KILL_TIMEOUT: float = 2.0
 var pending_kill_check: bool = false
 var sound_check_timer: float = 0.3
 var is_game_over: bool
+var startup_progress_bar: ProgressBar
+var startup_status_label: Label
 
 
 # Define visible game area bounds (in grid coordinates)
@@ -42,10 +48,105 @@ const VISIBLE_BOUNDS = {
 func _ready():
 	get_tree().paused = false
 	player.shake_requested.connect(shake_camera)
-	animation_player.play("show_splash_screen")
-	await get_tree().create_timer(2).timeout
 	game_over_label.hide()
+	await run_startup_sequence()
 	setup_level()
+
+func run_startup_sequence() -> void:
+	create_startup_overlay()
+	splash_background.show()
+	update_startup_progress(0.0, "Preparing renderer...")
+	await get_tree().process_frame
+	await warm_up_gpu_effects()
+	update_startup_progress(1.0, "Starting game...")
+	animation_player.play("show_splash_screen")
+	await get_tree().create_timer(animation_player.current_animation_length).timeout
+	if is_instance_valid(startup_progress_bar):
+		startup_progress_bar.queue_free()
+	if is_instance_valid(startup_status_label):
+		startup_status_label.queue_free()
+
+func create_startup_overlay() -> void:
+	if is_instance_valid(startup_progress_bar) and is_instance_valid(startup_status_label):
+		return
+
+	startup_progress_bar = ProgressBar.new()
+	startup_progress_bar.name = "StartupProgressBar"
+	startup_progress_bar.show_percentage = false
+	startup_progress_bar.min_value = 0.0
+	startup_progress_bar.max_value = 1.0
+	startup_progress_bar.value = 0.0
+	startup_progress_bar.custom_minimum_size = Vector2(260, 12)
+	startup_progress_bar.anchor_left = 0.5
+	startup_progress_bar.anchor_top = 1.0
+	startup_progress_bar.anchor_right = 0.5
+	startup_progress_bar.anchor_bottom = 1.0
+	startup_progress_bar.offset_left = -130.0
+	startup_progress_bar.offset_top = -54.0
+	startup_progress_bar.offset_right = 130.0
+	startup_progress_bar.offset_bottom = -38.0
+	splash_background.add_child(startup_progress_bar)
+
+	startup_status_label = Label.new()
+	startup_status_label.name = "StartupStatusLabel"
+	startup_status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	startup_status_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	startup_status_label.add_theme_font_override("font", UI_FONT)
+	startup_status_label.add_theme_font_size_override("font_size", 18)
+	startup_status_label.anchor_left = 0.5
+	startup_status_label.anchor_top = 1.0
+	startup_status_label.anchor_right = 0.5
+	startup_status_label.anchor_bottom = 1.0
+	startup_status_label.offset_left = -180.0
+	startup_status_label.offset_top = -86.0
+	startup_status_label.offset_right = 180.0
+	startup_status_label.offset_bottom = -58.0
+	startup_status_label.text = "Preparing renderer..."
+	splash_background.add_child(startup_status_label)
+
+func update_startup_progress(progress: float, status: String) -> void:
+	if is_instance_valid(startup_progress_bar):
+		startup_progress_bar.value = clamp(progress, 0.0, 1.0)
+	if is_instance_valid(startup_status_label):
+		startup_status_label.text = status
+
+func warm_up_gpu_effects() -> void:
+	update_startup_progress(0.15, "Compiling hole particles...")
+	await warm_up_particles(hole.get_node("Blood") as GPUParticles2D, 0.12)
+
+	update_startup_progress(0.55, "Compiling enemy particles...")
+	await warm_up_enemy_particles()
+
+	update_startup_progress(0.9, "Finalizing shaders...")
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+func warm_up_particles(particles: GPUParticles2D, duration: float = 0.12) -> void:
+	if particles == null:
+		return
+
+	particles.restart()
+	particles.emitting = true
+	await get_tree().process_frame
+	await get_tree().create_timer(duration).timeout
+	particles.emitting = false
+	await get_tree().process_frame
+
+func warm_up_enemy_particles() -> void:
+	var warmup_enemy = ENEMY_SCENE.instantiate()
+	warmup_enemy.position = camera.position
+	enemies_container.add_child(warmup_enemy)
+	warmup_enemy.can_move = false
+
+	await get_tree().process_frame
+
+	var blood := warmup_enemy.get_node("Blood") as GPUParticles2D
+	if blood != null:
+		blood.modulate.a = 1.0
+		await warm_up_particles(blood, 0.15)
+
+	warmup_enemy.queue_free()
+	await get_tree().process_frame
 	
 func _process(delta):
 	if time_remaining > 0:
